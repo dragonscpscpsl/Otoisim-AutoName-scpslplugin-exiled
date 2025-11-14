@@ -1,0 +1,9 @@
+KartliRolSecimi:
+  Acilenmis: true
+  Debug: false
+  RolSansi:
+    ClassD: 30.0
+    Scientist: 25.0
+    FacilityGuard: 20.0
+    NtfPrivate: 15.0
+    ChaosInsurgency: 10.0
