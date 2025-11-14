@@ -3,7 +3,8 @@ Good For Roleplay
 Roleplay için uyumlu
 Exiled Plugin that Automatically changes your name. (Adınızı otomatik olarak değiştiren Exiled Eklentisi.)
 # Needs (Gerekli) AdminTools
-Turkish (Türkçe)
+# Turkish (Türkçe)
+
 🟧 SCPSL Otomatik İsim Plugini – Özellik Listesi
 
 Bu plugin, oyuncuların rollerine göre otomatik ve dinamik isim (DisplayNickname) atayan gelişmiş bir isim sistemi sağlar. Tüm özellikler aşağıdadır:
@@ -98,7 +99,7 @@ cell_guard_title: "Koğuş Görevlisi | LV2.5 | {nick}"
 
 🎉 Tamamen otomatik, stabil ve yönetici dostu!
 
-English(İngilizce) Translated on ChatGPT
+# English(İngilizce) Translated on ChatGPT
 
 
 
