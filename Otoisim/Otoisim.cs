@@ -8,18 +8,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Otoisim
+namespace OtomatikIsim
 {
     public class Plugin : Plugin<Config>
     {
         public override string Name => "OtomatikIsim - AutoNamePlugin";
         public override string Author => "MadeBy atombombasi_55908";
-        public override Version Version => new Version(1, 0, 0);
+        public override Version Version => new Version(1, 1, 0);
 
         private static readonly List<string> AssignedSCPs = new List<string>();
         private static readonly List<string> ScpsNeedingProtector = new List<string>();
         private static readonly HashSet<int> UsedDNumbers = new HashSet<int>();
         private static int _guardCount = 0;
+        private static int _ntfCaptainCount = 0;
+        private static int _chaosConscriptCount = 0;
         private static readonly Random Rnd = new Random();
 
         public override void OnEnabled()
@@ -44,6 +46,8 @@ namespace Otoisim
             ScpsNeedingProtector.Clear();
             UsedDNumbers.Clear();
             _guardCount = 0;
+            _ntfCaptainCount = 0;
+            _chaosConscriptCount = 0;
             Log.Info("Round başladı. Otomatik isimler sıfırlandı.");
         }
 
@@ -65,7 +69,6 @@ namespace Otoisim
                 } while (UsedDNumbers.Contains(num));
                 UsedDNumbers.Add(num);
                 title = Config.DClassPrefix.Replace("{num}", num.ToString()).Replace("{nick}", originalNick);
-                Log.Info($"D-Class isim atandı: {title}");
             }
             else if (role == RoleTypeId.Scientist)
             {
@@ -84,44 +87,49 @@ namespace Otoisim
                     AssignedSCPs.Add(num);
                     ScpsNeedingProtector.Add(num);
                     title = Config.ResearcherTitle.Replace("{num}", num).Replace("{nick}", originalNick);
-                    Log.Info($"Bilim Adamı SCP-{num} isim atandı: {title}");
                 }
                 else
                 {
                     title = Config.HeadResearcherTitle.Replace("{nick}", originalNick);
-                    Log.Info($"Baş Araştırmacı isim atandı: {title}");
                 }
             }
+            // Facility Guard (Tesis Görevlileri)
             else if (role == RoleTypeId.FacilityGuard)
             {
                 _guardCount++;
 
                 if (_guardCount == 1)
-                {
-                    title = Config.ColonelTitle.Replace("{nick}", originalNick);
-                    Log.Info($"Albay isim atandı: {title}");
-                }
+                    title = Config.GuardColonelTitle.Replace("{nick}", originalNick); // Albay
                 else if (_guardCount == 2)
-                {
-                    title = Config.SergeantTitle.Replace("{nick}", originalNick);
-                    Log.Info($"Çavuş isim atandı: {title}");
-                }
+                    title = Config.GuardSergeantTitle.Replace("{nick}", originalNick); // Çavuş
                 else
-                {
-                    if (ScpsNeedingProtector.Count > 0)
-                    {
-                        int idx = Rnd.Next(ScpsNeedingProtector.Count);
-                        string num = ScpsNeedingProtector[idx];
-                        ScpsNeedingProtector.RemoveAt(idx);
-                        title = Config.ProtectorTitle.Replace("{num}", num).Replace("{nick}", originalNick);
-                        Log.Info($"SCP-{num} Koruma isim atandı: {title}");
-                    }
-                    else
-                    {
-                        title = Config.CellGuardTitle.Replace("{nick}", originalNick);
-                        Log.Info($"Koğuş Görevlisi isim atandı: {title}");
-                    }
-                }
+                    title = Config.GuardNormalTitle.Replace("{nick}", originalNick); // Tesis Görevlisi (diğerleri)
+            }
+            // NTF (MTF)
+            else if (role == RoleTypeId.NtfCaptain)
+            {
+                _ntfCaptainCount++;
+                if (_ntfCaptainCount == 1)
+                    title = Config.NtfCaptainTitle.Replace("{nick}", originalNick); // Kaptan
+                else
+                    title = Config.NtfLieutenantTitle.Replace("{nick}", originalNick); // Teğmen
+            }
+            else if (role == RoleTypeId.NtfSergeant || role == RoleTypeId.NtfSpecialist || role == RoleTypeId.NtfPrivate)
+            {
+                title = Config.NtfSoldierTitle.Replace("{nick}", originalNick); // Normal MTF Askeri
+            }
+            // Chaos Insurgency
+            else if (role == RoleTypeId.ChaosConscript)
+            {
+                _chaosConscriptCount++;
+                if (_chaosConscriptCount == 1)
+                    title = Config.ChaosLeaderTitle.Replace("{nick}", originalNick); // Lider
+                else
+                    title = Config.ChaosSoldierTitle.Replace("{nick}", originalNick); // Normal Chaos Askeri
+            }
+            else if (role == RoleTypeId.ChaosRepressor || role == RoleTypeId.ChaosRifleman || role == RoleTypeId.ChaosMarauder)
+            {
+                title = Config.ChaosEliteTitle.Replace("{nick}", originalNick); // Elite Chaos
             }
 
             if (!string.IsNullOrEmpty(title))
@@ -140,12 +148,26 @@ namespace Otoisim
         public bool IsEnabled { get; set; } = true;
         public bool Debug { get; set; } = true;
 
+        // D-Class
         public string DClassPrefix { get; set; } = "D-{num} | {nick}";
-        public string ColonelTitle { get; set; } = "Tesis Albayı | LV4 | {nick}";
-        public string SergeantTitle { get; set; } = "Tesis Çavuşu | LV3.5 | {nick}";
+
+        // Bilim Adamları
         public string ResearcherTitle { get; set; } = "SCP-{num} Araştırmacısı | LV2 | {nick}";
         public string HeadResearcherTitle { get; set; } = "Baş Araştırmacısı | LV3 | {nick}";
-        public string ProtectorTitle { get; set; } = "SCP-{num} Koruması | LV2 | {nick}";
-        public string CellGuardTitle { get; set; } = "Koğuş Görevlisi | LV2.5 | {nick}";
+
+        // Tesis Görevlileri (FacilityGuard)
+        public string GuardColonelTitle { get; set; } = "Tesis Albayı | LV4 | {nick}";      // 1. Guard
+        public string GuardSergeantTitle { get; set; } = "Tesis Çavuşu | LV3.5 | {nick}";    // 2. Guard
+        public string GuardNormalTitle { get; set; } = "Tesis Görevlisi | LV2 | {nick}";     // 3. ve sonrası
+
+        // MTF (NTF)
+        public string NtfCaptainTitle { get; set; } = "MTF Kaptanı | LV4 | {nick}";         // 1. NTF Captain
+        public string NtfLieutenantTitle { get; set; } = "MTF Teğmeni | LV3.5 | {nick}";    // Diğer Captain'lar
+        public string NtfSoldierTitle { get; set; } = "MTF Askeri | LV3 | {nick}";          // Sergeant/Specialist/Private
+
+        // Chaos Insurgency
+        public string ChaosLeaderTitle { get; set; } = "Chaos Lideri | LV4 | {nick}";       // 1. Chaos Conscript
+        public string ChaosSoldierTitle { get; set; } = "Chaos Askeri | LV3 | {nick}";      // Diğer Conscript'lar
+        public string ChaosEliteTitle { get; set; } = "Chaos Eliti | LV3.5 | {nick}";       // Repressor/Rifleman/Marauder
     }
 }
