@@ -1,6 +1,6 @@
 # Otoisim-AutoName-scpslplugin-exiled
-[![Version](https://img.shields.io/github/v/release/MedveMarci/Lobby?sort=semver&label=Version)](https://github.com/dragonscpscpsl/Otoisim-AutoName-scpslplugin-exiled/releases/)
-[![Downloads](https://img.shields.io/github/downloads/MedveMarci/Lobby/total?label=Downloads)](https://github.com/dragonscpscpsl/Otoisim-AutoName-scpslplugin-exiled/releases/)
+[![Version](https://img.shields.io/github/v/release/dragonscpscpsl/Otoisim-AutoName-scpslplugin-exiled?sort=semver&label=Version)](https://github.com/dragonscpscpsl/Otoisim-AutoName-scpslplugin-exiled/releases/)
+[![Downloads](https://img.shields.io/github/downloads/dragonscpscpsl/Otoisim-AutoName-scpslplugin-exiled/total?label=Downloads)](https://github.com/dragonscpscpsl/Otoisim-AutoName-scpslplugin-exiled/releases/)
 
 Good For Roleplay
 Roleplay için uyumlu
